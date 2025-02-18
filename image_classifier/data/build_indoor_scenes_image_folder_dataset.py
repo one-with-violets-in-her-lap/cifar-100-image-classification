@@ -9,13 +9,14 @@ from shutil import copyfile
 
 import click
 
+from image_classifier.data.indoor_scenes_dataset import (
+    INDOOR_SCENES_IMAGE_FOLDER_DATASET,
+)
 from image_classifier.utils.click_cli import start_click_cli_with_pretty_errors
 
 
 SOURCE_DATASET_ROOT_PATH = "./datasets/indoor-scenes-cvpr-2019"
 SOURCE_DATASET_IMAGES_PATH = "./datasets/indoor-scenes-cvpr-2019/indoorCVPR_09/Images"
-
-TRANSFORMED_DATASET_ROOT_PATH = "./datasets/indoor-scenes-image-folder"
 
 
 def copy_dataset_images(images_paths: list[str], destination_folder_path: str):
@@ -53,8 +54,8 @@ def build_dataset():
         test_images_paths = test_images_list_stream.read().split("\n")
         train_images_paths = train_images_list_stream.read().split("\n")
 
-    train_images_folder_path = os.path.join(TRANSFORMED_DATASET_ROOT_PATH, "train")
-    test_images_folder_path = os.path.join(TRANSFORMED_DATASET_ROOT_PATH, "test")
+    train_images_folder_path = os.path.join(INDOOR_SCENES_IMAGE_FOLDER_DATASET, "train")
+    test_images_folder_path = os.path.join(INDOOR_SCENES_IMAGE_FOLDER_DATASET, "test")
 
     os.makedirs(train_images_folder_path, exist_ok=True)
     os.makedirs(test_images_folder_path, exist_ok=True)
@@ -65,7 +66,7 @@ def build_dataset():
     click.echo(
         "\n"
         + f"Copied {len(train_images_paths)} train samples and "
-        + f"{len(test_images_paths)} test samples to {TRANSFORMED_DATASET_ROOT_PATH}"
+        + f"{len(test_images_paths)} test samples to {INDOOR_SCENES_IMAGE_FOLDER_DATASET}"
     )
 
 
