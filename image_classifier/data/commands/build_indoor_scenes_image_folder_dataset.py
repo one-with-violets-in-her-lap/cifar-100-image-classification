@@ -12,7 +12,6 @@ import click
 from image_classifier.data.indoor_scenes_dataset import (
     INDOOR_SCENES_IMAGE_FOLDER_DATASET,
 )
-from image_classifier.utils.click_cli import start_click_cli_with_pretty_errors
 
 
 SOURCE_DATASET_ROOT_PATH = "./datasets/indoor-scenes-cvpr-2019"
@@ -68,7 +67,3 @@ def build_dataset():
         + f"Copied {len(train_images_paths)} train samples and "
         + f"{len(test_images_paths)} test samples to {INDOOR_SCENES_IMAGE_FOLDER_DATASET}"
     )
-
-
-if __name__ == "__main__":
-    start_click_cli_with_pretty_errors(build_dataset)
