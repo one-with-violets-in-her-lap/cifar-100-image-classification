@@ -11,7 +11,11 @@ INDOOR_SCENES_IMAGE_FOLDER_DATASET = "./datasets/indoor-scenes-image-folder"
 indoor_scenes_train_dataset = datasets.ImageFolder(
     root=os.path.join(INDOOR_SCENES_IMAGE_FOLDER_DATASET, DatasetSplit.TRAIN.value),
     transform=transforms.Compose(
-        [transforms.Resize(size=(72, 72)), transforms.ToTensor()]
+        [
+            transforms.Resize(size=(128, 128)),
+            transforms.TrivialAugmentWide(),
+            transforms.ToTensor(),
+        ]
     ),
 )
 
@@ -19,8 +23,7 @@ indoor_scenes_test_dataset = datasets.ImageFolder(
     root=os.path.join(INDOOR_SCENES_IMAGE_FOLDER_DATASET, DatasetSplit.TEST.value),
     transform=transforms.Compose(
         [
-            transforms.Resize(size=(72, 72)),
-            transforms.TrivialAugmentWide(),
+            transforms.Resize(size=(128, 128)),
             transforms.ToTensor(),
         ]
     ),
