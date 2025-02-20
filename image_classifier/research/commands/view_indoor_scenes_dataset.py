@@ -7,18 +7,13 @@ from matplotlib import pyplot as plt
 import torch
 
 from image_classifier.data.indoor_scenes_dataset import indoor_scenes_train_dataset
-from image_classifier.utils.seeding import set_seed_for_randomness
 
 
 _IMAGES_TO_SHOW_COUNT = 4
 
 
 @click.command("view-dataset")
-@click.option("-s", "--seed", default=None, help="Seed for randomness")
-def view_indoor_scenes_dataset(seed: Optional[int]):
-    if seed is not None:
-        set_seed_for_randomness(seed)
-
+def view_indoor_scenes_dataset():
     figure = plt.figure(figsize=(14, 6))
     plt.title("Indoor Scenes CVPR 2019")
     plt.axis(False)
