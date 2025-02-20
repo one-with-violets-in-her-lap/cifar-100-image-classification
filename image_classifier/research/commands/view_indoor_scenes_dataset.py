@@ -1,6 +1,5 @@
 import math
 import random
-from typing import Optional
 
 import click
 from matplotlib import pyplot as plt
