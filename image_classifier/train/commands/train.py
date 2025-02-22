@@ -4,9 +4,9 @@ import torch
 from torch import nn
 from torchmetrics import Accuracy
 
-from image_classifier.data.indoor_scenes_dataset import (
-    create_indoor_scenes_dataloaders,
-    indoor_scenes_train_dataset,
+from image_classifier.data.cifar_100 import (
+    create_cifar_100_dataloaders,
+    cifar_100_train_dataset,
 )
 from image_classifier.models.convolutional_net import ConvolutionalNet
 from image_classifier.config import image_classifier_config
@@ -16,13 +16,13 @@ from image_classifier.train.test import test_neural_net
 
 @click.command()
 def train():
-    dataloaders = create_indoor_scenes_dataloaders(image_classifier_config.batch_size)
+    dataloaders = create_cifar_100_dataloaders(
+        image_classifier_config.batch_size, image_classifier_config.num_workers
+    )
     train_dataloader = dataloaders.train
     test_dataloader = dataloaders.test
 
-    neural_net = ConvolutionalNet(
-        classes_count=len(indoor_scenes_train_dataset.classes)
-    )
+    neural_net = ConvolutionalNet(classes_count=len(cifar_100_train_dataset.classes))
     neural_net.to(device=image_classifier_config.device)
 
     optimizer = torch.optim.Adam(
@@ -33,7 +33,7 @@ def train():
     loss_function.to(device=image_classifier_config.device)
 
     accuracy_function = Accuracy(
-        "multiclass", num_classes=len(indoor_scenes_train_dataset.classes)
+        "multiclass", num_classes=len(cifar_100_train_dataset.classes)
     )
     accuracy_function.to(device=image_classifier_config.device)
 

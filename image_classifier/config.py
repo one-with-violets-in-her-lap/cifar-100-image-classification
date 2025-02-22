@@ -17,6 +17,7 @@ class ImageClassifierConfig:
     training: TrainingConfig
 
     batch_size: int = 16
+    num_workers: int = 0
     device: Literal["cuda", "cpu"] = default_device
 
 
@@ -24,5 +25,6 @@ image_classifier_config = ImageClassifierConfig(
     seed=43,
     batch_size=64,
     device="cuda",
+    num_workers=2,
     training=TrainingConfig(epochs_count=50, learning_rate=0.001),
 )

@@ -8,6 +8,9 @@ from image_classifier.data.commands.build_indoor_scenes_image_folder_dataset imp
 from image_classifier.research.commands.view_indoor_scenes_dataset import (
     view_indoor_scenes_dataset,
 )
+from image_classifier.research.commands.view_cifar_100_dataset import (
+    view_cifar_100_dataset,
+)
 from image_classifier.train.commands.train import (
     train,
 )
@@ -20,7 +23,7 @@ def cli():
 
 
 cli.add_command(build_dataset)
-cli.add_command(view_indoor_scenes_dataset)
+cli.add_command(view_cifar_100_dataset)
 cli.add_command(train)
 
 if __name__ == "__main__":
