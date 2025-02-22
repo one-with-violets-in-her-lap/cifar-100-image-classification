@@ -10,8 +10,9 @@ from image_classifier.data.cifar_100 import (
     create_cifar_100_dataloaders,
     cifar_100_train_dataset,
 )
-from image_classifier.models.custom_convolutional_net import CustomConvolutionalNet
 from image_classifier.config import image_classifier_config
+from image_classifier.models.named_neural_net import NamedNeuralNet
+from image_classifier.models.res_net import ResNet18
 from image_classifier.research.metrics import NeuralNetMetrics
 from image_classifier.train.test import test_neural_net
 
@@ -25,12 +26,10 @@ def train():
     train_dataloader = dataloaders.train
     test_dataloader = dataloaders.test
 
-    neural_net = CustomConvolutionalNet(
-        classes_count=len(cifar_100_train_dataset.classes)
-    )
+    neural_net = ResNet18(classes_count=len(cifar_100_train_dataset.classes))
     neural_net.to(device=image_classifier_config.device)
 
-    optimizer = torch.optim.Adam(
+    optimizer = torch.optim.SGD(
         neural_net.parameters(), lr=image_classifier_config.training.learning_rate
     )
 
@@ -82,7 +81,7 @@ def train():
 
 
 def perform_training_iteration(
-    neural_net: CustomConvolutionalNet,
+    neural_net: NamedNeuralNet,
     train_dataloader: torch.utils.data.DataLoader,
     optimizer: torch.optim.Optimizer,
     loss_function: nn.Module,
