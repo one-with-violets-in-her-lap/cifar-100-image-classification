@@ -18,7 +18,7 @@ class ConvolutionalNet(nn.Module):
         self.flatten_layer = nn.Flatten()
 
         self.fully_connected_layer_1 = nn.Linear(
-            in_features=16 * 13 * 13, out_features=120
+            in_features=16 * 53 * 53, out_features=120
         )
         self.fully_connected_layer_2 = nn.Linear(in_features=120, out_features=64)
         self.fully_connected_layer_3 = nn.Linear(
@@ -37,27 +37,27 @@ class ConvolutionalNet(nn.Module):
 
     def forward(self, input_data: torch.Tensor):
         output: torch.Tensor = self.conv_layer_1(input_data)
-        click.echo(f"Conv layer 1 output: {output.shape}")
+        # click.echo(f"Conv layer 1 output: {output.shape}")
         output = self.relu_layer(output)
         output = self.max_pool_layer(output)
 
         output = self.conv_layer_2(output)
         output = self.relu_layer(output)
         output = self.max_pool_layer(output)
-        click.echo(f"Conv layer 2 output with pooling and activation: {output.shape}")
+        # click.echo(f"Conv layer 2 output with pooling and activation: {output.shape}")
 
         output = self.flatten_layer(output)
-        click.echo(f"Flatten layer output: {output.shape}")
+        # click.echo(f"Flatten layer output: {output.shape}")
 
         output = self.fully_connected_layer_1(output)
-        click.echo(f"FC layer 1 output: {output.shape}")
+        # click.echo(f"FC layer 1 output: {output.shape}")
         output = self.relu_layer(output)
 
         output = self.fully_connected_layer_2(output)
-        click.echo(f"FC layer 2 output: {output.shape}")
+        # click.echo(f"FC layer 2 output: {output.shape}")
         output = self.relu_layer(output)
 
         output = self.fully_connected_layer_3(output)
-        click.echo(f"FC layer 3 output: {output.shape}")
+        # click.echo(f"FC layer 3 output: {output.shape}")
 
         return output
