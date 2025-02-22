@@ -27,9 +27,7 @@ def view_cifar_100_dataset():
         random_image: torch.Tensor = random_sample[0]
         random_image_class_index: int = random_sample[1]
 
-        random_image_class = cifar_100_train_dataset.classes[
-            random_image_class_index
-        ]
+        random_image_class = cifar_100_train_dataset.classes[random_image_class_index]
 
         plt.title(f"{number}. {random_image_class}")
         plt.axis(False)

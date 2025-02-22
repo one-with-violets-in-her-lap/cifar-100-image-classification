@@ -26,5 +26,7 @@ class ImageClassifierConfig:
 image_classifier_config = ImageClassifierConfig(
     seed=43,
     device="cuda",
-    training=TrainingConfig(epochs_count=36, learning_rate=0.001, batch_size=64, num_workers=4),
+    training=TrainingConfig(
+        epochs_count=36, learning_rate=0.001, batch_size=64, num_workers=4
+    ),
 )

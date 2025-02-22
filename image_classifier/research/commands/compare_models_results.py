@@ -20,13 +20,13 @@ def compare_models_results():
 
         # Loss bar chart
         figure.add_subplot(1, 2, 1)
-        plt.title('Loss')
+        plt.title("Loss")
         for results_record in models_results:
             plt.bar(results_record.neural_net_name, results_record.loss)
 
         # Accuracy bar chart
         figure.add_subplot(1, 2, 2)
-        plt.title('Accuracy')
+        plt.title("Accuracy")
         for results_record in models_results:
             plt.bar(results_record.neural_net_name, results_record.accuracy)
 
