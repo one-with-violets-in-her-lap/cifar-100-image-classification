@@ -1,12 +1,12 @@
 import click
 
 from image_classifier.config import image_classifier_config
+from image_classifier.research.commands.compare_models_results import (
+    compare_models_results,
+)
 from image_classifier.utils.seeding import set_seed_for_randomness
 from image_classifier.data.commands.build_indoor_scenes_image_folder_dataset import (
     build_dataset,
-)
-from image_classifier.research.commands.view_indoor_scenes_dataset import (
-    view_indoor_scenes_dataset,
 )
 from image_classifier.research.commands.view_cifar_100_dataset import (
     view_cifar_100_dataset,
@@ -24,6 +24,7 @@ def cli():
 
 cli.add_command(build_dataset)
 cli.add_command(view_cifar_100_dataset)
+cli.add_command(compare_models_results)
 cli.add_command(train)
 
 if __name__ == "__main__":

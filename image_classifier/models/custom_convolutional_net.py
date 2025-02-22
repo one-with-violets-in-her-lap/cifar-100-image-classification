@@ -2,10 +2,12 @@ import click
 import torch
 from torch import nn
 
+from image_classifier.models.named_neural_net import NamedNeuralNet
 
-class CustomConvolutionalNet(nn.Module):
+
+class CustomConvolutionalNet(NamedNeuralNet):
     def __init__(self, classes_count: int):
-        super().__init__()
+        super().__init__('Custom convolutional network')
 
         self.convolutional_block_1 = nn.Sequential(
             nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, padding=1),

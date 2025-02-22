@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class NeuralNetMetrics:
+    neural_net_name: str
     loss: float
     accuracy: float
     """Model accuracy as a percentage, e.g. `50`"""

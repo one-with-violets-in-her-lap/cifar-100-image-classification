@@ -8,6 +8,8 @@ from image_classifier.utils.default_device import default_device
 class TrainingConfig:
     epochs_count: int
     learning_rate: float = 0.01
+    num_workers: int = 0
+    batch_size: int = 16
 
 
 @dataclass
@@ -16,15 +18,13 @@ class ImageClassifierConfig:
 
     training: TrainingConfig
 
-    batch_size: int = 16
-    num_workers: int = 0
     device: Literal["cuda", "cpu"] = default_device
+
+    model_results_file_path: str = "./image_classifier/research/models-results.json"
 
 
 image_classifier_config = ImageClassifierConfig(
     seed=43,
-    batch_size=64,
     device="cuda",
-    num_workers=0,
-    training=TrainingConfig(epochs_count=200, learning_rate=0.001),
+    training=TrainingConfig(epochs_count=36, learning_rate=0.001, batch_size=64, num_workers=4),
 )

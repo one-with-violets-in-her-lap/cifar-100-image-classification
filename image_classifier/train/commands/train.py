@@ -1,3 +1,5 @@
+import json
+import os
 from typing import Callable
 import click
 import torch
@@ -10,19 +12,22 @@ from image_classifier.data.cifar_100 import (
 )
 from image_classifier.models.custom_convolutional_net import CustomConvolutionalNet
 from image_classifier.config import image_classifier_config
-from image_classifier.train.metrics import NeuralNetMetrics
+from image_classifier.research.metrics import NeuralNetMetrics
 from image_classifier.train.test import test_neural_net
 
 
 @click.command()
 def train():
     dataloaders = create_cifar_100_dataloaders(
-        image_classifier_config.batch_size, image_classifier_config.num_workers
+        image_classifier_config.training.batch_size,
+        image_classifier_config.training.num_workers,
     )
     train_dataloader = dataloaders.train
     test_dataloader = dataloaders.test
 
-    neural_net = CustomConvolutionalNet(classes_count=len(cifar_100_train_dataset.classes))
+    neural_net = CustomConvolutionalNet(
+        classes_count=len(cifar_100_train_dataset.classes)
+    )
     neural_net.to(device=image_classifier_config.device)
 
     optimizer = torch.optim.Adam(
@@ -42,6 +47,9 @@ def train():
         + f"batches with {train_dataloader.batch_size} images in each\n"
     )
 
+    highest_test_accuracy = 0
+    lowest_test_loss = 0
+
     for epoch_number in range(1, image_classifier_config.training.epochs_count + 1):
         train_results = perform_training_iteration(
             neural_net, train_dataloader, optimizer, loss_function, accuracy_function
@@ -54,8 +62,23 @@ def train():
             image_classifier_config.device,
         )
 
+        if highest_test_accuracy < test_results.accuracy:
+            highest_test_accuracy = test_results.accuracy
+
+        if lowest_test_loss > test_results.loss or lowest_test_loss == 0:
+            lowest_test_loss = test_results.loss
+
         click.echo(f"Epoch #{epoch_number} train results: {str(train_results)}")
         click.echo(f"\tTest results: {str(test_results)}\n")
+
+    click.echo("Finished training. Saving model results")
+    save_model_results(
+        NeuralNetMetrics(
+            neural_net_name=neural_net.name,
+            loss=lowest_test_loss,
+            accuracy=highest_test_accuracy,
+        )
+    )
 
 
 def perform_training_iteration(
@@ -98,6 +121,33 @@ def perform_training_iteration(
     average_loss = total_loss / batches_count
     average_accuracy = (total_accuracy / batches_count) * 100
 
-    train_results = NeuralNetMetrics(loss=average_loss, accuracy=average_accuracy)
+    train_results = NeuralNetMetrics(
+        loss=average_loss, accuracy=average_accuracy, neural_net_name=neural_net.name
+    )
 
     return train_results
+
+
+def save_model_results(results: NeuralNetMetrics):
+    models_results_dicts: list[dict] = []
+
+    if os.path.exists(image_classifier_config.model_results_file_path):
+        with open(
+            image_classifier_config.model_results_file_path, "rt", encoding="utf-8"
+        ) as models_results_json_stream:
+            models_results_dicts = json.load(models_results_json_stream)
+
+            models_results_dicts = [
+                model_results
+                for model_results in models_results_dicts
+                if model_results["neural_net_name"] != results.neural_net_name
+            ]
+
+    models_results_dicts.append(vars(results))
+
+    with open(
+        image_classifier_config.model_results_file_path, "wt", encoding="utf-8"
+    ) as models_results_json_write_stream:
+        models_results_json_write_stream.write(json.dumps(models_results_dicts))
+
+    click.echo(f"Saved to {image_classifier_config.model_results_file_path}")

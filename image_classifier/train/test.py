@@ -2,11 +2,12 @@ from typing import Callable
 from torch import nn
 import torch
 
-from image_classifier.train.metrics import NeuralNetMetrics
+from image_classifier.models.named_neural_net import NamedNeuralNet
+from image_classifier.research.metrics import NeuralNetMetrics
 
 
 def test_neural_net(
-    neural_net: nn.Module,
+    neural_net: NamedNeuralNet,
     test_dataloader: torch.utils.data.DataLoader,
     accuracy_function: Callable,
     device: torch.types.Device,
@@ -38,4 +39,8 @@ def test_neural_net(
         average_loss = total_loss / batches_count
         average_accuracy = (total_accuracy / batches_count) * 100
 
-        return NeuralNetMetrics(loss=average_loss, accuracy=average_accuracy)
+        return NeuralNetMetrics(
+            loss=average_loss,
+            accuracy=average_accuracy,
+            neural_net_name=neural_net.name,
+        )
