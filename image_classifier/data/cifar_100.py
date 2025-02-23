@@ -14,6 +14,7 @@ cifar_100_train_dataset = datasets.CIFAR100(
             transforms.Resize(size=(64, 64)),
             transforms.TrivialAugmentWide(),
             transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         ]
     ),
 )
@@ -26,6 +27,7 @@ cifar_100_test_dataset = datasets.CIFAR100(
         [
             transforms.Resize(size=(64, 64)),
             transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         ]
     ),
 )

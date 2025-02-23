@@ -33,6 +33,10 @@ def train():
         neural_net.parameters(), lr=image_classifier_config.training.learning_rate
     )
 
+    learning_rate_scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer, step_size=10, gamma=0.1
+    )
+
     loss_function = nn.CrossEntropyLoss()
     loss_function.to(device=image_classifier_config.device)
 
@@ -53,6 +57,8 @@ def train():
         train_results = perform_training_iteration(
             neural_net, train_dataloader, optimizer, loss_function, accuracy_function
         )
+
+        learning_rate_scheduler.step()
 
         test_results = test_neural_net(
             neural_net,

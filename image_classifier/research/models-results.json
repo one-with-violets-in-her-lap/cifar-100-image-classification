@@ -1,1 +1,1 @@
-[{"neural_net_name": "Custom convolutional network", "loss": 2.209830714177482, "accuracy": 35.78916139240506}, {"neural_net_name": "ResNet base model", "loss": 1.8386980801820756, "accuracy": 37.8125}]
+[{"neural_net_name": "Custom convolutional network", "loss": 2.209830714177482, "accuracy": 35.78916139240506}, {"neural_net_name": "ResNet base model", "loss": 1.8560890638375585, "accuracy": 40.36787974683544}]
