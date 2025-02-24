@@ -22,6 +22,8 @@ class ImageClassifierConfig:
 
     model_results_file_path: str = "./image_classifier/research/models-results.json"
 
+    saved_models_directory_path: str = "./bin"
+
 
 image_classifier_config = ImageClassifierConfig(
     seed=43,

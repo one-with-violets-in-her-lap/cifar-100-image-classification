@@ -1,3 +1,4 @@
+import atexit
 import json
 import os
 from typing import Callable
@@ -28,6 +29,12 @@ def train():
 
     neural_net = ResNet18(classes_count=len(cifar_100_train_dataset.classes))
     neural_net.to(device=image_classifier_config.device)
+
+    atexit.register(
+        lambda: save_model(
+            neural_net, image_classifier_config.saved_models_directory_path
+        )
+    )
 
     optimizer = torch.optim.SGD(
         neural_net.parameters(), lr=image_classifier_config.training.learning_rate
@@ -75,9 +82,12 @@ def train():
 
         click.echo(f"Epoch #{epoch_number} train results: {str(train_results)}")
         click.echo(f"\tTest results: {str(test_results)}")
-        click.echo(f"\tCurrent learning rate: {learning_rate_scheduler.get_last_lr()}\n")
+        click.echo(
+            f"\tCurrent learning rate: {learning_rate_scheduler.get_last_lr()}\n"
+        )
 
     click.echo("Finished training. Saving model results")
+
     save_model_results(
         NeuralNetMetrics(
             neural_net_name=neural_net.name,
@@ -139,7 +149,9 @@ def save_model_results(results: NeuralNetMetrics):
 
     if os.path.exists(image_classifier_config.model_results_file_path):
         with open(
-            image_classifier_config.model_results_file_path, "rt", encoding="utf-8"
+            image_classifier_config.model_results_file_path,
+            "rt",
+            encoding="utf-8",
         ) as models_results_json_stream:
             models_results_dicts = json.load(models_results_json_stream)
 
@@ -156,4 +168,18 @@ def save_model_results(results: NeuralNetMetrics):
     ) as models_results_json_write_stream:
         models_results_json_write_stream.write(json.dumps(models_results_dicts))
 
-    click.echo(f"Saved to {image_classifier_config.model_results_file_path}")
+    click.echo(
+        f"Model results saved to {image_classifier_config.model_results_file_path}"
+    )
+
+
+def save_model(model: NamedNeuralNet, saved_models_directory_path: str):
+    if not os.path.exists(saved_models_directory_path):
+        os.makedirs(saved_models_directory_path, exist_ok=True)
+
+    path_to_save_model_to = os.path.join(
+        saved_models_directory_path, f"{model.name}.pth"
+    )
+
+    torch.save(model.state_dict(), path_to_save_model_to)
+    click.echo(f"Model saved to {path_to_save_model_to}")
