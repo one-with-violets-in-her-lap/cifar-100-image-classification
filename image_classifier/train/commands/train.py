@@ -74,7 +74,8 @@ def train():
             lowest_test_loss = test_results.loss
 
         click.echo(f"Epoch #{epoch_number} train results: {str(train_results)}")
-        click.echo(f"\tTest results: {str(test_results)}\n")
+        click.echo(f"\tTest results: {str(test_results)}")
+        click.echo(f"\tCurrent learning rate: {learning_rate_scheduler.get_last_lr()}\n")
 
     click.echo("Finished training. Saving model results")
     save_model_results(
