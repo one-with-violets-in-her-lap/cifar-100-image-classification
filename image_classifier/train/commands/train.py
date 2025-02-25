@@ -15,6 +15,7 @@ from image_classifier.config import image_classifier_config
 from image_classifier.models.named_neural_net import NamedNeuralNet
 from image_classifier.models.res_net import ResNet18
 from image_classifier.research.metrics import NeuralNetMetrics
+from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 from image_classifier.train.test import test_neural_net
 
 
@@ -30,15 +31,40 @@ def train():
     neural_net = ResNet18(classes_count=len(cifar_100_train_dataset.classes))
     neural_net.to(device=image_classifier_config.device)
 
-    atexit.register(
-        lambda: save_model(
-            neural_net, image_classifier_config.saved_models_directory_path
-        )
-    )
-
     optimizer = torch.optim.SGD(
         neural_net.parameters(), lr=image_classifier_config.training.learning_rate
     )
+
+    # Loads training checkpoint if it has been saved previously
+    training_checkpoint = (
+        load_training_checkpoint(
+            image_classifier_config.training.training_checkpoint_to_load_path
+        )
+        if image_classifier_config.training.training_checkpoint_to_load_path is not None
+        else None
+    )
+
+    if training_checkpoint is not None:
+        optimizer.load_state_dict(training_checkpoint["optimizer_state_dict"])
+        neural_net.load_state_dict(training_checkpoint["neural_net_state_dict"])
+
+        click.echo(
+            "Loaded training checkpoint from "
+            + f"{image_classifier_config.training.training_checkpoint_to_load_path}\n"
+        )
+
+    # Registers the exit handler that saves a training checkpoint
+    if image_classifier_config.training.save_training_checkpoint_on_exit:
+        atexit.register(
+            lambda: save_training_checkpoint(
+                {
+                    "neural_net_name": neural_net.name,
+                    "neural_net_state_dict": neural_net.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                },
+                image_classifier_config.saved_models_directory_path,
+            )
+        )
 
     learning_rate_scheduler = torch.optim.lr_scheduler.StepLR(
         optimizer, step_size=10, gamma=0.1
@@ -86,15 +112,17 @@ def train():
             f"\tCurrent learning rate: {learning_rate_scheduler.get_last_lr()}\n"
         )
 
-    click.echo("Finished training. Saving model results")
+    click.echo("Finished training\n")
 
-    save_model_results(
-        NeuralNetMetrics(
-            neural_net_name=neural_net.name,
-            loss=lowest_test_loss,
-            accuracy=highest_test_accuracy,
+    if image_classifier_config.training.save_model_results_on_exit:
+        click.echo("Saving model results")
+        save_model_results(
+            NeuralNetMetrics(
+                neural_net_name=neural_net.name,
+                loss=lowest_test_loss,
+                accuracy=highest_test_accuracy,
+            )
         )
-    )
 
 
 def perform_training_iteration(
@@ -173,13 +201,20 @@ def save_model_results(results: NeuralNetMetrics):
     )
 
 
-def save_model(model: NamedNeuralNet, saved_models_directory_path: str):
+def save_training_checkpoint(
+    checkpoint: TrainingCheckpoint, saved_models_directory_path: str
+):
     if not os.path.exists(saved_models_directory_path):
         os.makedirs(saved_models_directory_path, exist_ok=True)
 
-    path_to_save_model_to = os.path.join(
-        saved_models_directory_path, f"{model.name}.pth"
+    path_to_save_to = os.path.join(
+        saved_models_directory_path,
+        f"{checkpoint['neural_net_name']} (training checkpoint).pth",
     )
 
-    torch.save(model.state_dict(), path_to_save_model_to)
-    click.echo(f"Model saved to {path_to_save_model_to}")
+    torch.save(checkpoint, path_to_save_to)
+    click.echo(f"Training checkpoint saved to {path_to_save_to}")
+
+
+def load_training_checkpoint(checkpoint_path_to_load: str) -> TrainingCheckpoint:
+    return torch.load(checkpoint_path_to_load)
