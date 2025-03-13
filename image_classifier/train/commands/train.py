@@ -32,7 +32,10 @@ def train():
     neural_net.to(device=image_classifier_config.device)
 
     optimizer = torch.optim.SGD(
-        neural_net.parameters(), lr=image_classifier_config.training.learning_rate
+        neural_net.parameters(),
+        lr=image_classifier_config.training.learning_rate,
+        momentum=image_classifier_config.training.momentum,
+        weight_decay=image_classifier_config.training.weight_decay,
     )
 
     # Loads training checkpoint if it has been saved previously
@@ -66,8 +69,8 @@ def train():
             )
         )
 
-    learning_rate_scheduler = torch.optim.lr_scheduler.StepLR(
-        optimizer, step_size=10, gamma=0.1
+    learning_rate_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=image_classifier_config.training.epochs_count - 20
     )
 
     loss_function = nn.CrossEntropyLoss()
@@ -109,7 +112,7 @@ def train():
         click.echo(f"Epoch #{epoch_number} train results: {str(train_results)}")
         click.echo(f"\tTest results: {str(test_results)}")
         click.echo(
-            f"\tCurrent learning rate: {learning_rate_scheduler.get_last_lr()}\n"
+            f"\tCurrent learning rate: {optimizer.state_dict()['param_groups'][0]['lr']}\n"
         )
 
     click.echo("Finished training\n")
