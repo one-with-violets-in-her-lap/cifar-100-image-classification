@@ -3,7 +3,7 @@ from torch import nn
 import torch
 
 from image_classifier.models.named_neural_net import NamedNeuralNet
-from image_classifier.research.metrics import NeuralNetMetrics
+from image_classifier.research.lib.metrics import NeuralNetMetrics
 
 
 def test_neural_net(
@@ -39,7 +39,7 @@ def test_neural_net(
         average_accuracy = (total_accuracy / batches_count) * 100
 
         return NeuralNetMetrics(
-            loss=average_loss,
-            accuracy=average_accuracy,
             neural_net_name=neural_net.name,
+            accuracy_records_for_each_epoch=[average_accuracy],
+            loss_records_for_each_epoch=[average_loss],
         )

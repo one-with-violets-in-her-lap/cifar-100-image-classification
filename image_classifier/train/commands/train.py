@@ -14,9 +14,12 @@ from image_classifier.data.cifar_100 import (
 from image_classifier.config import image_classifier_config
 from image_classifier.models.named_neural_net import NamedNeuralNet
 from image_classifier.models.res_net import ResNet18
-from image_classifier.research.metrics import NeuralNetMetrics
+from image_classifier.research.lib.metrics import (
+    NeuralNetMetrics,
+)
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 from image_classifier.test.test import test_neural_net
+from image_classifier.utils.train_test_split import TrainTestValue
 
 
 @click.command()
@@ -86,8 +89,29 @@ def train():
         + f"batches with {train_dataloader.batch_size} images in each\n"
     )
 
-    highest_test_accuracy = 0
-    lowest_test_loss = 0
+    metrics = TrainTestValue(
+        train=NeuralNetMetrics(
+            neural_net_name=neural_net.name,
+            loss_records_for_each_epoch=[],
+            accuracy_records_for_each_epoch=[],
+        ),
+        test=NeuralNetMetrics(
+            neural_net_name=neural_net.name,
+            loss_records_for_each_epoch=[],
+            accuracy_records_for_each_epoch=[],
+        ),
+    )
+
+    if image_classifier_config.training.save_model_results_on_exit:
+        atexit.register(
+            lambda: save_model_results(
+                NeuralNetMetrics(
+                    neural_net_name=neural_net.name,
+                    loss_records_for_each_epoch=metrics.test.loss_records_for_each_epoch,
+                    accuracy_records_for_each_epoch=metrics.test.accuracy_records_for_each_epoch,
+                )
+            )
+        )
 
     for epoch_number in range(1, image_classifier_config.training.epochs_count + 1):
         train_results = perform_training_iteration(
@@ -104,11 +128,15 @@ def train():
             image_classifier_config.device,
         )
 
-        if highest_test_accuracy < test_results.accuracy:
-            highest_test_accuracy = test_results.accuracy
+        metrics.train.accuracy_records_for_each_epoch.append(
+            train_results.get_best_accuracy()
+        )
+        metrics.train.loss_records_for_each_epoch.append(train_results.get_best_loss())
 
-        if lowest_test_loss > test_results.loss or lowest_test_loss == 0:
-            lowest_test_loss = test_results.loss
+        metrics.test.accuracy_records_for_each_epoch.append(
+            test_results.get_best_accuracy()
+        )
+        metrics.test.loss_records_for_each_epoch.append(test_results.get_best_loss())
 
         click.echo(f"Epoch #{epoch_number} train results: {str(train_results)}")
         click.echo(f"\tTest results: {str(test_results)}")
@@ -117,16 +145,6 @@ def train():
         )
 
     click.echo("Finished training\n")
-
-    if image_classifier_config.training.save_model_results_on_exit:
-        click.echo("Saving model results")
-        save_model_results(
-            NeuralNetMetrics(
-                neural_net_name=neural_net.name,
-                loss=lowest_test_loss,
-                accuracy=highest_test_accuracy,
-            )
-        )
 
 
 def perform_training_iteration(
@@ -138,8 +156,11 @@ def perform_training_iteration(
 ):
     neural_net.train()
 
-    total_loss = 0
-    total_accuracy = 0
+    train_results = NeuralNetMetrics(
+        neural_net_name=neural_net.name,
+        accuracy_records_for_each_epoch=[],
+        loss_records_for_each_epoch=[],
+    )
 
     for batch in train_dataloader:
         images: torch.Tensor = batch[0].to(device=image_classifier_config.device)
@@ -149,8 +170,8 @@ def perform_training_iteration(
 
         raw_output = neural_net(images)
 
-        batch_loss = loss_function(raw_output, ideal_classes_output)
-        total_loss += batch_loss.item()
+        batch_loss: torch.Tensor = loss_function(raw_output, ideal_classes_output)
+        train_results.loss_records_for_each_epoch.append(batch_loss.item())
 
         optimizer.zero_grad()
 
@@ -161,17 +182,12 @@ def perform_training_iteration(
         predicted_probabilities: torch.Tensor = raw_output.softmax(0)
         predicted_classes = predicted_probabilities.argmax(dim=1)
 
-        batch_accuracy = accuracy_function(predicted_classes, ideal_classes_output)
-        total_accuracy += batch_accuracy.item()
-
-    batches_count = len(train_dataloader)
-
-    average_loss = total_loss / batches_count
-    average_accuracy = (total_accuracy / batches_count) * 100
-
-    train_results = NeuralNetMetrics(
-        loss=average_loss, accuracy=average_accuracy, neural_net_name=neural_net.name
-    )
+        batch_accuracy: torch.Tensor = accuracy_function(
+            predicted_classes, ideal_classes_output
+        )
+        train_results.accuracy_records_for_each_epoch.append(
+            batch_accuracy.item() * 100
+        )
 
     return train_results
 

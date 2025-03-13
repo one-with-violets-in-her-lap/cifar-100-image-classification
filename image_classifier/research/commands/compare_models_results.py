@@ -2,7 +2,7 @@ import json
 import click
 from matplotlib import pyplot as plt
 
-from image_classifier.research.metrics import NeuralNetMetrics
+from image_classifier.research.lib.metrics import NeuralNetMetrics
 from image_classifier.config import image_classifier_config
 
 
@@ -20,14 +20,16 @@ def compare_models_results():
 
         # Loss bar chart
         figure.add_subplot(1, 2, 1)
-        plt.title("Loss")
+        plt.title("Average loss")
         for results_record in models_results:
-            plt.bar(results_record.neural_net_name, results_record.loss)
+            plt.bar(results_record.neural_net_name, results_record.get_best_loss())
 
         # Accuracy bar chart
         figure.add_subplot(1, 2, 2)
-        plt.title("Accuracy")
+        plt.title("Average accuracy")
         for results_record in models_results:
-            plt.bar(results_record.neural_net_name, results_record.accuracy)
+            plt.bar(
+                results_record.neural_net_name, results_record.get_best_accuracy()
+            )
 
         plt.show()

@@ -39,6 +39,7 @@ class ImageClassifierConfig:
     saved_models_directory_path: str = "./bin"
 
 
+# TODO: move to .env/yaml/cmd args
 image_classifier_config = ImageClassifierConfig(
     seed=43,
     device="cuda",
@@ -48,9 +49,10 @@ image_classifier_config = ImageClassifierConfig(
         momentum=0.9,
         weight_decay=0.0005,
         save_training_checkpoint_on_exit=True,
+        save_model_results_on_exit=True,
     ),
     testing=TestingConfig(
-        checkpoint_to_test_path="./bin/ResNet base model (training checkpoint).pth"
+        checkpoint_to_test_path="./bin/ResNet base model (training checkpoint) 70 training acc.pth"
     ),
     batch_size=128,
     num_workers=7,
