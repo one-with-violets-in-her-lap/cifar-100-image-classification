@@ -10,11 +10,10 @@ def test_neural_net(
     neural_net: NamedNeuralNet,
     test_dataloader: torch.utils.data.DataLoader,
     accuracy_function: Callable,
+    loss_function: nn.Module,
     device: torch.types.Device,
 ):
     neural_net.eval()
-
-    loss_function = nn.CrossEntropyLoss()
 
     total_loss = 0
     total_accuracy = 0

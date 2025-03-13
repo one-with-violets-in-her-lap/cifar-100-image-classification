@@ -16,14 +16,14 @@ from image_classifier.models.named_neural_net import NamedNeuralNet
 from image_classifier.models.res_net import ResNet18
 from image_classifier.research.metrics import NeuralNetMetrics
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
-from image_classifier.train.test import test_neural_net
+from image_classifier.test.test import test_neural_net
 
 
 @click.command()
 def train():
     dataloaders = create_cifar_100_dataloaders(
-        image_classifier_config.training.batch_size,
-        image_classifier_config.training.num_workers,
+        image_classifier_config.batch_size,
+        image_classifier_config.num_workers,
     )
     train_dataloader = dataloaders.train
     test_dataloader = dataloaders.test
@@ -100,6 +100,7 @@ def train():
             neural_net,
             test_dataloader,
             accuracy_function,
+            loss_function,
             image_classifier_config.device,
         )
 

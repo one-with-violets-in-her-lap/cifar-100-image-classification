@@ -12,12 +12,14 @@ class TrainingConfig:
     momentum: float = 0
     weight_decay: float = 0
 
-    num_workers: int = 0
-    batch_size: int = 16
-
     save_model_results_on_exit: bool = False
     save_training_checkpoint_on_exit: bool = False
     training_checkpoint_to_load_path: Optional[str] = None
+
+
+@dataclass
+class TestingConfig:
+    checkpoint_to_test_path: str
 
 
 @dataclass
@@ -25,6 +27,10 @@ class ImageClassifierConfig:
     seed: Optional[int]
 
     training: TrainingConfig
+    testing: TestingConfig
+
+    batch_size: int = 16
+    num_workers: int = 0
 
     device: Literal["cuda", "cpu"] = default_device
 
@@ -41,8 +47,11 @@ image_classifier_config = ImageClassifierConfig(
         learning_rate=0.02,
         momentum=0.9,
         weight_decay=0.0005,
-        batch_size=128,
-        num_workers=7,
         save_training_checkpoint_on_exit=True,
     ),
+    testing=TestingConfig(
+        checkpoint_to_test_path="./bin/ResNet base model (training checkpoint).pth"
+    ),
+    batch_size=128,
+    num_workers=7,
 )

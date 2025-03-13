@@ -3,7 +3,11 @@ name = "image-classifier"
 version = "0.1.0"
 description = ""
 readme = "README.md"
-package-mode = false
+authors = []
+package-mode = true
+
+[tool.poetry.scripts]
+image-classifier = "image_classifier.main:cli"
 
 [tool.poetry.dependencies]
 python = "^3.10"

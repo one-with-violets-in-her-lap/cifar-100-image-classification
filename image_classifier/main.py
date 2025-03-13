@@ -14,6 +14,9 @@ from image_classifier.research.commands.view_cifar_100_dataset import (
 from image_classifier.train.commands.train import (
     train,
 )
+from image_classifier.test.commands.test_model_from_checkpoint import (
+    test_model_from_checkpoint,
+)
 
 
 @click.group()
@@ -26,6 +29,4 @@ cli.add_command(build_dataset)
 cli.add_command(view_cifar_100_dataset)
 cli.add_command(compare_models_results)
 cli.add_command(train)
-
-if __name__ == "__main__":
-    cli()
+cli.add_command(test_model_from_checkpoint)
