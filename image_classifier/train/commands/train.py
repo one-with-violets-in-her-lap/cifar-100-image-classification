@@ -22,8 +22,8 @@ from image_classifier.test.test import test_neural_net
 from image_classifier.utils.train_test_split import TrainTestValue
 
 
-@click.command()
-def train():
+@click.command("train")
+def handle_train_command():
     dataloaders = create_cifar_100_dataloaders(
         image_classifier_config.batch_size,
         image_classifier_config.num_workers,

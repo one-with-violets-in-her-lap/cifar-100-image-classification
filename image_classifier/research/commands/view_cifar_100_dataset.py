@@ -12,7 +12,7 @@ _IMAGES_TO_SHOW_COUNT = 4
 
 
 @click.command("view-cifar-100-dataset")
-def view_cifar_100_dataset():
+def handle_view_cifar_100_dataset_command():
     figure = plt.figure(figsize=(14, 6))
     plt.title("CIFAR-100")
     plt.axis(False)

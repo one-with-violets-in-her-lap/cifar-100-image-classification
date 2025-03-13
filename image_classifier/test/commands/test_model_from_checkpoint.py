@@ -22,7 +22,7 @@ class CheckpointFilePathNotSpecifiedError(TypeError):
 
 
 @click.command("test")
-def test_model_from_checkpoint():
+def handle_test_model_command():
     test_dataloader = create_cifar_100_dataloaders(
         image_classifier_config.batch_size, image_classifier_config.num_workers
     ).test

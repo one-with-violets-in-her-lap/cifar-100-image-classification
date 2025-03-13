@@ -12,7 +12,7 @@ _IMAGES_TO_SHOW_COUNT = 4
 
 
 @click.command("view-indoor-scenes-dataset")
-def view_indoor_scenes_dataset():
+def handle_view_indoor_scenes_dataset_command():
     figure = plt.figure(figsize=(14, 6))
     plt.title("Indoor Scenes CVPR 2019")
     plt.axis(False)

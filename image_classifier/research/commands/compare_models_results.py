@@ -7,7 +7,7 @@ from image_classifier.config import image_classifier_config
 
 
 @click.command("compare-models-results")
-def compare_models_results():
+def handle_compare_models_results_command():
     with open(
         image_classifier_config.model_results_file_path, "rt", encoding="utf-8"
     ) as models_results_json_stream:

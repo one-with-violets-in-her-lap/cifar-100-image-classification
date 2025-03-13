@@ -35,8 +35,8 @@ def copy_dataset_images(images_paths: list[str], destination_folder_path: str):
         copyfile(image_full_path, new_image_path)
 
 
-@click.command()
-def build_dataset():
+@click.command('build-dataset')
+def handle_build_dataset_command():
     if not os.path.isdir(SOURCE_DATASET_ROOT_PATH):
         raise FileNotFoundError(
             "Indoor scenes dataset folder cannot be found "
