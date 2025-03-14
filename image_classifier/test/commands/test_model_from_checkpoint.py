@@ -9,7 +9,7 @@ from image_classifier.data.cifar_100 import (
     cifar_100_test_dataset,
 )
 from image_classifier.models.res_net import ResNet18
-from image_classifier.test.test import test_neural_net
+from image_classifier.test.lib.test import test_neural_net
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 
 

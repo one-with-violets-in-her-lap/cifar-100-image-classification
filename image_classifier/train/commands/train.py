@@ -18,7 +18,7 @@ from image_classifier.research.lib.metrics import (
     NeuralNetMetrics,
 )
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
-from image_classifier.test.test import test_neural_net
+from image_classifier.test.lib.test import test_neural_net
 from image_classifier.utils.train_test_split import TrainTestValue
 
 
