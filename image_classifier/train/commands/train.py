@@ -106,7 +106,9 @@ def handle_train_command():
                 NeuralNetMetrics(
                     neural_net_name=neural_net.name,
                     loss_records_for_each_epoch=metrics.test.loss_records_for_each_epoch,
-                    accuracy_records_for_each_epoch=metrics.test.accuracy_records_for_each_epoch,
+                    accuracy_records_for_each_epoch=(
+                        metrics.test.accuracy_records_for_each_epoch
+                    ),
                 )
             )
         )
@@ -139,7 +141,8 @@ def handle_train_command():
         click.echo(f"Epoch #{epoch_number} train results: {str(train_results)}")
         click.echo(f"\tTest results: {str(test_results)}")
         click.echo(
-            f"\tCurrent learning rate: {optimizer.state_dict()['param_groups'][0]['lr']}\n"
+            "\tCurrent learning rate: "
+            + f"{optimizer.state_dict()['param_groups'][0]['lr']}\n"
         )
 
     click.echo("Finished training\n")
