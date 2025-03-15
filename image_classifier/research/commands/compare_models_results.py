@@ -28,8 +28,6 @@ def handle_compare_models_results_command():
         figure.add_subplot(1, 2, 2)
         plt.title("Average accuracy")
         for results_record in models_results:
-            plt.bar(
-                results_record.neural_net_name, results_record.get_best_accuracy()
-            )
+            plt.bar(results_record.neural_net_name, results_record.get_best_accuracy())
 
         plt.show()

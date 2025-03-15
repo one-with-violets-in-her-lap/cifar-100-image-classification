@@ -43,9 +43,7 @@ def handle_train_command():
 
     # Loads training checkpoint if it has been saved previously
     training_checkpoint = (
-        load_training_checkpoint(
-            image_classifier_config.training_checkpoint_path
-        )
+        load_training_checkpoint(image_classifier_config.training_checkpoint_path)
         if image_classifier_config.training_checkpoint_path is not None
         else None
     )
