@@ -1,6 +1,9 @@
 import click
 
 from image_classifier.config import image_classifier_config
+from image_classifier.research.commands.arbitrary_image_inference import (
+    handle_arbitrary_image_classification_command,
+)
 from image_classifier.research.commands.compare_models_results import (
     handle_compare_models_results_command,
 )
@@ -34,3 +37,7 @@ cli.add_command(handle_compare_models_results_command)
 cli.add_command(handle_train_command)
 cli.add_command(handle_test_model_command)
 cli.add_command(handle_plot_and_accuracy_command)
+cli.add_command(handle_arbitrary_image_classification_command)
+
+if __name__ == "__main__":
+    cli()

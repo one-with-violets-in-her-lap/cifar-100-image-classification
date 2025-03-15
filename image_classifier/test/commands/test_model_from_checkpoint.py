@@ -3,6 +3,7 @@ import torch
 from torchmetrics import Accuracy
 from torch import nn
 
+from image_classifier.common_errors import CheckpointFilePathNotSpecifiedError
 from image_classifier.config import image_classifier_config
 from image_classifier.data.cifar_100 import (
     create_cifar_100_dataloaders,
@@ -11,14 +12,6 @@ from image_classifier.data.cifar_100 import (
 from image_classifier.models.res_net import ResNet18
 from image_classifier.test.lib.test import test_neural_net
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
-
-
-class CheckpointFilePathNotSpecifiedError(TypeError):
-    def __init__(self):
-        super().__init__(
-            "Checkpoint (`testing.checkpoint_to_test_path` setting) "
-            + "must be specified in the config"
-        )
 
 
 @click.command("test")
@@ -30,11 +23,11 @@ def handle_test_model_command():
     neural_net = ResNet18(classes_count=len(cifar_100_test_dataset.classes))
     neural_net.to(device=image_classifier_config.device)
 
-    if image_classifier_config.testing.checkpoint_to_test_path is None:
+    if image_classifier_config.training_checkpoint_path is None:
         raise CheckpointFilePathNotSpecifiedError()
 
     training_checkpoint: TrainingCheckpoint = torch.load(
-        image_classifier_config.testing.checkpoint_to_test_path
+        image_classifier_config.training_checkpoint_path
     )
 
     neural_net.load_state_dict(training_checkpoint["neural_net_state_dict"])

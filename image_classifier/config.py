@@ -14,12 +14,6 @@ class TrainingConfig:
 
     save_model_results_on_exit: bool = False
     save_training_checkpoint_on_exit: bool = False
-    training_checkpoint_to_load_path: Optional[str] = None
-
-
-@dataclass
-class TestingConfig:
-    checkpoint_to_test_path: str
 
 
 @dataclass
@@ -27,7 +21,6 @@ class ImageClassifierConfig:
     seed: Optional[int]
 
     training: TrainingConfig
-    testing: TestingConfig
 
     batch_size: int = 16
     num_workers: int = 0
@@ -37,6 +30,8 @@ class ImageClassifierConfig:
     model_results_file_path: str = "./image_classifier/research/models-results.json"
 
     saved_models_directory_path: str = "./bin"
+
+    training_checkpoint_path: Optional[str] = None
 
 
 # TODO: move to .env/yaml/cmd args
@@ -51,9 +46,7 @@ image_classifier_config = ImageClassifierConfig(
         save_training_checkpoint_on_exit=True,
         save_model_results_on_exit=True,
     ),
-    testing=TestingConfig(
-        checkpoint_to_test_path="./bin/ResNet base model (training checkpoint) 90 training acc.pth"
-    ),
     batch_size=128,
     num_workers=4,
+    training_checkpoint_path="./bin/ResNet base model (training checkpoint) 90 training acc.pth",
 )

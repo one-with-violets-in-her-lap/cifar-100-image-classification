@@ -44,9 +44,9 @@ def handle_train_command():
     # Loads training checkpoint if it has been saved previously
     training_checkpoint = (
         load_training_checkpoint(
-            image_classifier_config.training.training_checkpoint_to_load_path
+            image_classifier_config.training_checkpoint_path
         )
-        if image_classifier_config.training.training_checkpoint_to_load_path is not None
+        if image_classifier_config.training_checkpoint_path is not None
         else None
     )
 
@@ -56,7 +56,7 @@ def handle_train_command():
 
         click.echo(
             "Loaded training checkpoint from "
-            + f"{image_classifier_config.training.training_checkpoint_to_load_path}\n"
+            + f"{image_classifier_config.training_checkpoint_path}\n"
         )
 
     # Registers the exit handler that saves a training checkpoint

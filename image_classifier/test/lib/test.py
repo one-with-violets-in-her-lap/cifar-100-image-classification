@@ -28,7 +28,8 @@ def test_neural_net(
             batch_loss = loss_function(raw_output, ideal_classes_output)
             total_loss += batch_loss.item()
 
-            predicted_probabilities: torch.Tensor = raw_output.softmax(0)
+            predicted_probabilities: torch.Tensor = raw_output.softmax(dim=1)
+
             predicted_classes = predicted_probabilities.argmax(dim=1)
 
             batch_accuracy = accuracy_function(predicted_classes, ideal_classes_output)
