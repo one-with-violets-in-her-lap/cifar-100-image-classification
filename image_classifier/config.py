@@ -39,7 +39,7 @@ image_classifier_config = ImageClassifierConfig(
     seed=43,
     device="cuda",
     training=TrainingConfig(
-        epochs_count=300,
+        epochs_count=130,
         learning_rate=0.02,
         momentum=0.9,
         weight_decay=0.0005,
@@ -48,5 +48,5 @@ image_classifier_config = ImageClassifierConfig(
     ),
     batch_size=128,
     num_workers=4,
-    training_checkpoint_path="./bin/ResNet base model (training checkpoint) 90 training acc.pth",
+    training_checkpoint_path="./bin/ResNet base model (training checkpoint) 100 training acc.pth",
 )
