@@ -34,6 +34,4 @@ def classify_image(image: Image.Image, device: str, training_checkpoint_path: st
         predicted_probabilities: torch.Tensor = raw_output.softmax(dim=1)
         predicted_class = predicted_probabilities.argmax(dim=1)
 
-        print(raw_output, predicted_probabilities)
-
         return predicted_class.squeeze()
