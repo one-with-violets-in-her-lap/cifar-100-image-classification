@@ -1,6 +1,5 @@
 import click
 from matplotlib import pyplot as plt
-from torchvision import io, transforms
 from PIL import Image
 
 from image_classifier.common_errors import CheckpointFilePathNotSpecifiedError
