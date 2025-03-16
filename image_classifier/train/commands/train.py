@@ -180,7 +180,7 @@ def perform_training_iteration(
 
         optimizer.step()
 
-        predicted_probabilities: torch.Tensor = raw_output.softmax(0)
+        predicted_probabilities: torch.Tensor = raw_output.softmax(dim=1)
         predicted_classes = predicted_probabilities.argmax(dim=1)
 
         batch_accuracy: torch.Tensor = accuracy_function(
