@@ -1,18 +1,25 @@
+import typing
 import torch
 from torchvision import transforms
+from PIL import Image
 
 from image_classifier.models.res_net import ResNet18
 from image_classifier.data.cifar_100 import cifar_100_test_dataset
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 
 
-arbitrary_image_transforms = transforms.Compose([transforms.Resize((32, 32))])
+arbitrary_image_transforms = transforms.Compose(
+    [
+        transforms.Resize(size=(64, 64)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ]
+)
 
 
-def classify_image(image: torch.Tensor, device: str, training_checkpoint_path: str):
-    image = image.to(device=device, dtype=torch.float)
-
-    image = arbitrary_image_transforms(image)
+def classify_image(image: Image.Image, device: str, training_checkpoint_path: str):
+    image_tensor = typing.cast(torch.Tensor, arbitrary_image_transforms(image))
+    image_tensor = image_tensor.to(device=device)
 
     neural_net = ResNet18(len(cifar_100_test_dataset.classes))
     neural_net.to(device=device)
@@ -22,7 +29,7 @@ def classify_image(image: torch.Tensor, device: str, training_checkpoint_path: s
 
     neural_net.eval()
     with torch.inference_mode():
-        raw_output: torch.Tensor = neural_net(image.unsqueeze(dim=0))
+        raw_output: torch.Tensor = neural_net(image_tensor.unsqueeze(dim=0))
 
         predicted_probabilities: torch.Tensor = raw_output.softmax(dim=1)
         predicted_class = predicted_probabilities.argmax(dim=1)
