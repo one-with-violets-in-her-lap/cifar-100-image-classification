@@ -48,5 +48,5 @@ image_classifier_config = ImageClassifierConfig(
     ),
     batch_size=128,
     num_workers=4,
-    training_checkpoint_path="./bin/ResNet base model (training checkpoint) 100 training acc.pth",
+    training_checkpoint_path="./bin/resnet-70-test-accuracy.pth",
 )
