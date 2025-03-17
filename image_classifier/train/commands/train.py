@@ -1,4 +1,5 @@
 import atexit
+from dataclasses import asdict
 import json
 import os
 from typing import Callable
@@ -16,6 +17,7 @@ from image_classifier.models.named_neural_net import NamedNeuralNet
 from image_classifier.models.res_net import ResNet18
 from image_classifier.research.lib.metrics import (
     NeuralNetMetrics,
+    NeuralNetTrainTestMetrics,
 )
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 from image_classifier.test.lib.test import test_neural_net
@@ -87,31 +89,14 @@ def handle_train_command():
         + f"batches with {train_dataloader.batch_size} images in each\n"
     )
 
-    metrics = TrainTestValue(
-        train=NeuralNetMetrics(
-            neural_net_name=neural_net.name,
-            loss_records_for_each_epoch=[],
-            accuracy_records_for_each_epoch=[],
-        ),
-        test=NeuralNetMetrics(
-            neural_net_name=neural_net.name,
-            loss_records_for_each_epoch=[],
-            accuracy_records_for_each_epoch=[],
-        ),
+    metrics = NeuralNetTrainTestMetrics(
+        neural_net_name=neural_net.name,
+        loss_records_for_each_epoch=TrainTestValue(test=[], train=[]),
+        accuracy_records_for_each_epoch=TrainTestValue(test=[], train=[]),
     )
 
     if image_classifier_config.training.save_model_results_on_exit:
-        atexit.register(
-            lambda: save_model_results(
-                NeuralNetMetrics(
-                    neural_net_name=neural_net.name,
-                    loss_records_for_each_epoch=metrics.test.loss_records_for_each_epoch,
-                    accuracy_records_for_each_epoch=(
-                        metrics.test.accuracy_records_for_each_epoch
-                    ),
-                )
-            )
-        )
+        atexit.register(lambda: save_model_results(metrics))
 
     for epoch_number in range(1, image_classifier_config.training.epochs_count + 1):
         train_results = perform_training_iteration(
@@ -128,15 +113,15 @@ def handle_train_command():
             image_classifier_config.device,
         )
 
-        metrics.train.accuracy_records_for_each_epoch.append(
+        metrics.accuracy_records_for_each_epoch.train.append(
             train_results.get_best_accuracy()
         )
-        metrics.train.loss_records_for_each_epoch.append(train_results.get_best_loss())
+        metrics.loss_records_for_each_epoch.train.append(train_results.get_best_loss())
 
-        metrics.test.accuracy_records_for_each_epoch.append(
+        metrics.accuracy_records_for_each_epoch.test.append(
             test_results.get_best_accuracy()
         )
-        metrics.test.loss_records_for_each_epoch.append(test_results.get_best_loss())
+        metrics.loss_records_for_each_epoch.test.append(test_results.get_best_loss())
 
         click.echo(f"Epoch #{epoch_number} train results: {str(train_results)}")
         click.echo(f"\tTest results: {str(test_results)}")
@@ -193,7 +178,7 @@ def perform_training_iteration(
     return train_results
 
 
-def save_model_results(results: NeuralNetMetrics):
+def save_model_results(results: NeuralNetTrainTestMetrics):
     models_results_dicts: list[dict] = []
 
     if os.path.exists(image_classifier_config.model_results_file_path):
@@ -210,7 +195,7 @@ def save_model_results(results: NeuralNetMetrics):
                 if model_results["neural_net_name"] != results.neural_net_name
             ]
 
-    models_results_dicts.append(vars(results))
+    models_results_dicts.append(asdict(results))
 
     with open(
         image_classifier_config.model_results_file_path, "wt", encoding="utf-8"
