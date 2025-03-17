@@ -11,7 +11,7 @@ from image_classifier.research.lib.arbitrary_image_inference import classify_ima
 @click.command("classify")
 @click.option("-i", "--image-path", required=True)
 def handle_arbitrary_image_classification_command(image_path: str):
-    image = Image.open(image_path).convert('RGB')
+    image = Image.open(image_path).convert("RGB")
 
     click.echo(
         f"Loaded the image ({image.width}x{image.height}), "
