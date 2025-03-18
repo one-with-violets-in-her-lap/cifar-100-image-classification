@@ -94,7 +94,7 @@ class BottleNeckResidualBlock(nn.Module):
 
 class ResNet(NamedNeuralNet):
     def __init__(self, blocks_counts: list[int], classes_count: int, in_channels=3):
-        super().__init__("ResNet base model")
+        super().__init__("ResNet")
 
         out_features = [256, 512, 1024, 2048]
 
@@ -152,4 +152,17 @@ class ResNet(NamedNeuralNet):
 
 class ResNet18(ResNet):
     def __init__(self, classes_count: int):
+        super().__init__([2, 2, 2, 2], classes_count, 3)
+        self.name = "Resnet 18"
+
+
+class ResNet50(ResNet):
+    def __init__(self, classes_count: int):
         super().__init__([3, 4, 6, 3], classes_count, 3)
+        self.name = "Resnet 50"
+
+
+class ResNet101(ResNet):
+    def __init__(self, classes_count: int):
+        super().__init__([3, 4, 23, 3], classes_count, 3)
+        self.name = "Resnet 101"
