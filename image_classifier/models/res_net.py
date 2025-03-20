@@ -18,6 +18,7 @@ class ConvBlock(nn.Module):
         self.layers = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding),
             nn.BatchNorm2d(out_channels),
+            nn.Dropout2d(p=0.25),
         )
 
     def forward(self, input_data: torch.Tensor):
@@ -38,15 +39,23 @@ class BottleNeckResidualBlock(nn.Module):
         self.projection_shortcut = None
 
         if self.is_projection:
-            self.projection_shortcut = nn.Conv2d(
-                in_channels, out_channels, kernel_size=1, stride=2, padding=0
+            self.projection_shortcut = nn.Sequential(
+                nn.Conv2d(
+                    in_channels, out_channels, kernel_size=1, stride=2, padding=0
+                ),
+                nn.BatchNorm2d(out_channels),
+                nn.Dropout2d(p=0.25),
             )
             stride = 2
             residual_intermediate_channels = in_channels // 2
 
         if first:
-            self.projection_shortcut = nn.Conv2d(
-                in_channels, out_channels, kernel_size=1, stride=1, padding=0
+            self.projection_shortcut = nn.Sequential(
+                nn.Conv2d(
+                    in_channels, out_channels, kernel_size=1, stride=1, padding=0
+                ),
+                nn.BatchNorm2d(out_channels),
+                nn.Dropout2d(p=0.25),
             )
             stride = 1
             residual_intermediate_channels = in_channels
