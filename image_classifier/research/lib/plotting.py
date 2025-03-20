@@ -57,5 +57,7 @@ def plot_loss_and_accuracy(*metrics_items: NeuralNetTrainTestMetrics):
         plt.xlabel("Epoch")
         plt.ylabel("Accuracy")
 
+    plt.tight_layout(w_pad=5)
+
     plt.legend()
     plt.show()
