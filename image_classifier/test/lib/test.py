@@ -7,7 +7,7 @@ from image_classifier.research.lib.metrics import NeuralNetMetrics
 
 
 def test_neural_net(
-    neural_net: NamedNeuralNet,
+    neural_net: nn.Module,
     test_dataloader: torch.utils.data.DataLoader,
     accuracy_function: Callable,
     loss_function: nn.Module,
@@ -39,8 +39,14 @@ def test_neural_net(
         average_loss = total_loss / batches_count
         average_accuracy = (total_accuracy / batches_count) * 100
 
+        neural_net_name = (
+            neural_net.name
+            if isinstance(neural_net, NamedNeuralNet)
+            else "Unnamed neural net"
+        )
+
         return NeuralNetMetrics(
-            neural_net_name=neural_net.name,
+            neural_net_name=neural_net_name,
             accuracy_records_for_each_epoch=[average_accuracy],
             loss_records_for_each_epoch=[average_loss],
         )

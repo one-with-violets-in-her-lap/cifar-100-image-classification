@@ -10,6 +10,7 @@ from image_classifier.data.cifar_100 import (
     cifar_100_test_dataset,
 )
 from image_classifier.models.res_net import ResNet18
+from image_classifier.models.test_time_augmentation import enable_test_time_augmentation
 from image_classifier.test.lib.test import test_neural_net
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 
@@ -31,6 +32,8 @@ def handle_test_model_command():
     )
 
     neural_net.load_state_dict(training_checkpoint["neural_net_state_dict"])
+
+    neural_net = enable_test_time_augmentation(neural_net)
 
     loss_function = nn.CrossEntropyLoss()
     loss_function.to(device=image_classifier_config.device)

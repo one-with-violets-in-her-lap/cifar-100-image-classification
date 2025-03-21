@@ -5,6 +5,7 @@ from PIL import Image
 
 from image_classifier.models.res_net import ResNet18
 from image_classifier.data.cifar_100 import cifar_100_test_dataset
+from image_classifier.models.test_time_augmentation import enable_test_time_augmentation
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 
 
@@ -22,10 +23,12 @@ def classify_image(image: Image.Image, device: str, training_checkpoint_path: st
     image_tensor = image_tensor.to(device=device)
 
     neural_net = ResNet18(len(cifar_100_test_dataset.classes))
-    neural_net.to(device=device)
 
     training_checkpoint: TrainingCheckpoint = torch.load(training_checkpoint_path)
     neural_net.load_state_dict(training_checkpoint["neural_net_state_dict"])
+
+    neural_net = enable_test_time_augmentation(neural_net)
+    neural_net.to(device=device)
 
     neural_net.eval()
     with torch.inference_mode():

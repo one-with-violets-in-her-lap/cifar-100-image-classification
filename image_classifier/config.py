@@ -22,6 +22,13 @@ class ImageClassifierConfig:
 
     training: TrainingConfig
 
+    test_time_augmentation_enabled: bool
+    """Enables test time augmentation during testing and arbitrary image inference
+
+    **Even if set to `true`, it is not used for test step during training**
+    (due to speed considerations)
+    """
+
     batch_size: int = 16
     num_workers: int = 0
 
@@ -38,8 +45,9 @@ class ImageClassifierConfig:
 image_classifier_config = ImageClassifierConfig(
     seed=43,
     device="cuda",
+    test_time_augmentation_enabled=True,
     training=TrainingConfig(
-        epochs_count=130,
+        epochs_count=400,
         learning_rate=0.02,
         momentum=0.9,
         weight_decay=0.0005,
@@ -48,5 +56,5 @@ image_classifier_config = ImageClassifierConfig(
     ),
     batch_size=128,
     num_workers=4,
-    training_checkpoint_path="./bin/resnet-70-test-accuracy.pth",
+    training_checkpoint_path="./bin/resnet-18-400-epochs (training checkpoint).pt"
 )
