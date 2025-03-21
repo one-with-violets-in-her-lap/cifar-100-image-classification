@@ -17,6 +17,7 @@ torchvision = "^0.21.0"
 matplotlib = "^3.10.0"
 pyqt5 = "^5.15.11"
 torchmetrics = "^1.6.1"
+ttach = "^0.0.3"
 
 
 [tool.poetry.group.dev.dependencies]

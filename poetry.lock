@@ -1360,6 +1360,20 @@ tests = ["autopep8", "flake8", "isort", "llnl-hatchet", "numpy", "pytest", "scip
 tutorials = ["matplotlib", "pandas", "tabulate"]
 
 [[package]]
+name = "ttach"
+version = "0.0.3"
+description = "Images test time augmentation with PyTorch."
+optional = false
+python-versions = ">=3.0.0"
+files = [
+    {file = "ttach-0.0.3-py3-none-any.whl", hash = "sha256:7000bb4334f856b0c79a341df386c92f1c76faf091043cc3cd7f541d2149faf8"},
+    {file = "ttach-0.0.3.tar.gz", hash = "sha256:120c4dd881feb0e9c8dd63b154f2655891c3e20689b68a94d162bfd5557bcb48"},
+]
+
+[package.extras]
+test = ["pytest"]
+
+[[package]]
 name = "typing-extensions"
 version = "4.12.2"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -1373,4 +1387,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3cb03a6655cb0a24afd21d26e5236322385a3b74dd2a39fe9697240367882bd7"
+content-hash = "e7b889a24bb612fd612899e6aafd3188da652824635e9d23cd439cc9b877fbf9"
