@@ -56,5 +56,5 @@ image_classifier_config = ImageClassifierConfig(
     ),
     batch_size=128,
     num_workers=4,
-    training_checkpoint_path="./bin/resnet-18-400-epochs (training checkpoint).pt"
+    training_checkpoint_path="./bin/resnet-18.pt"
 )
