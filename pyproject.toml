@@ -23,7 +23,6 @@ ttach = "^0.0.3"
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
 pylint = "^3.3.4"
-ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core"]
