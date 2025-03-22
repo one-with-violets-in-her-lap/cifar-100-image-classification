@@ -182,9 +182,9 @@ def perform_training_iteration(
 def save_model_results(results: NeuralNetTrainTestMetrics):
     models_results_dicts: list[dict] = []
 
-    if os.path.exists(image_classifier_config.model_results_file_path):
+    if os.path.exists(image_classifier_config.training.models_results_file_path):
         with open(
-            image_classifier_config.model_results_file_path,
+            image_classifier_config.training.models_results_file_path,
             "rt",
             encoding="utf-8",
         ) as models_results_json_stream:
@@ -199,12 +199,12 @@ def save_model_results(results: NeuralNetTrainTestMetrics):
     models_results_dicts.append(asdict(results))
 
     with open(
-        image_classifier_config.model_results_file_path, "wt", encoding="utf-8"
+        image_classifier_config.training.models_results_file_path, "wt", encoding="utf-8"
     ) as models_results_json_write_stream:
         models_results_json_write_stream.write(json.dumps(models_results_dicts))
 
     click.echo(
-        f"Model results saved to {image_classifier_config.model_results_file_path}"
+        f"Model results saved to {image_classifier_config.training.models_results_file_path}"
     )
 
 

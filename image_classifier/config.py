@@ -12,6 +12,8 @@ class TrainingConfig:
     momentum: float = 0
     weight_decay: float = 0
 
+    models_results_file_path: str = "./models-training-results.json"
+
     save_model_results_on_exit: bool = False
     save_training_checkpoint_on_exit: bool = False
 
@@ -34,8 +36,6 @@ class ImageClassifierConfig:
 
     device: Literal["cuda", "cpu"] = default_device
 
-    model_results_file_path: str = "./image_classifier/research/models-results.json"
-
     saved_models_directory_path: str = "./bin"
 
     training_checkpoint_path: Optional[str] = None
@@ -56,5 +56,5 @@ image_classifier_config = ImageClassifierConfig(
     ),
     batch_size=128,
     num_workers=4,
-    training_checkpoint_path="./bin/resnet-18.pt"
+    training_checkpoint_path="./bin/resnet-18.pt",
 )

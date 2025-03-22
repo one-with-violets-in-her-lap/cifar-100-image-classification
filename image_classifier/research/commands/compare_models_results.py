@@ -13,7 +13,7 @@ from image_classifier.utils.train_test_split import DatasetSplit
 @click.command("compare-models-results")
 def handle_compare_models_results_command():
     with open(
-        image_classifier_config.model_results_file_path, "rt", encoding="utf-8"
+        image_classifier_config.training.models_results_file_path, "rt", encoding="utf-8"
     ) as models_results_json_stream:
         models_results_dicts: list[dict] = json.load(models_results_json_stream)
         models_results = [
