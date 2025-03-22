@@ -11,6 +11,7 @@ from image_classifier.data.cifar_100 import (
 )
 from image_classifier.models.res_net import ResNet18
 from image_classifier.models.test_time_augmentation import enable_test_time_augmentation
+from image_classifier.research.lib.metrics import save_model_results
 from image_classifier.test.lib.test import test_neural_net
 from image_classifier.train.lib.training_checkpoint import TrainingCheckpoint
 
@@ -33,7 +34,8 @@ def handle_test_model_command():
 
     neural_net.load_state_dict(training_checkpoint["neural_net_state_dict"])
 
-    neural_net = enable_test_time_augmentation(neural_net)
+    if image_classifier_config.test_time_augmentation_enabled:
+        neural_net = enable_test_time_augmentation(neural_net)
 
     loss_function = nn.CrossEntropyLoss()
     loss_function.to(device=image_classifier_config.device)
@@ -53,4 +55,21 @@ def handle_test_model_command():
         image_classifier_config.device,
     )
 
-    click.echo(click.style("\nResults", bold=True) + "\n" + str(results))
+    click.echo(click.style("\nResults", bold=True) + "\n" + str(results) + "\n")
+
+    model_results_name: str = click.prompt(
+        "Choose a name for model results snapshot to save (ENTER to skip)", default=""
+    )
+
+    if len(model_results_name.strip()) == 0:
+        return
+
+    results.neural_net_name = model_results_name
+
+    save_model_results(
+        results, image_classifier_config.testing.models_results_file_path
+    )
+
+    click.echo(
+        f"Model results saved to {image_classifier_config.testing.models_results_file_path}"
+    )

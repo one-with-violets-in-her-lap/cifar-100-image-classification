@@ -19,10 +19,16 @@ class TrainingConfig:
 
 
 @dataclass
+class TestingConfig:
+    models_results_file_path: str = "./models-testing-results.json"
+
+
+@dataclass
 class ImageClassifierConfig:
     seed: Optional[int]
 
     training: TrainingConfig
+    testing: TestingConfig
 
     test_time_augmentation_enabled: bool
     """Enables test time augmentation during testing and arbitrary image inference
@@ -45,7 +51,7 @@ class ImageClassifierConfig:
 image_classifier_config = ImageClassifierConfig(
     seed=43,
     device="cuda",
-    test_time_augmentation_enabled=True,
+    test_time_augmentation_enabled=False,
     training=TrainingConfig(
         epochs_count=270,
         learning_rate=0.02,
@@ -54,6 +60,7 @@ image_classifier_config = ImageClassifierConfig(
         save_training_checkpoint_on_exit=True,
         save_model_results_on_exit=True,
     ),
+    testing=TestingConfig(),
     batch_size=128,
     num_workers=4,
     training_checkpoint_path="./bin/resnet-18.pt",
