@@ -1,5 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+import json
+import os
+from typing import TypeVar
 
+from image_classifier.utils.dataclass_from_dict import (
+    create_dataclass_instance_from_dict,
+)
 from image_classifier.utils.train_test_split import DatasetSplit, TrainTestValue
 
 
@@ -55,5 +61,59 @@ class NeuralNetTrainTestMetrics:
         best_test_accuracy = round(self.get_best_accuracy(DatasetSplit.TEST), 2)
         return (
             f"Best loss - train: {best_train_loss}, test: {best_test_loss} | "
-            + f"Best accuracy - train: {best_train_accuracy}%, test: {best_test_accuracy}%"
+            + f"Best accuracy - train: {best_train_accuracy}%, "
+            + f"test: {best_test_accuracy}%"
         )
+
+
+ModelsResultsT = TypeVar("ModelsResultsT", NeuralNetMetrics, NeuralNetTrainTestMetrics)
+
+
+def load_models_results(
+    file_path: str,
+    models_results_type: type[ModelsResultsT],
+):
+    with open(
+        file_path,
+        "rt",
+        encoding="utf-8",
+    ) as models_results_json_stream:
+        models_results_dicts: list[dict] = json.load(models_results_json_stream)
+        models_results = [
+            create_dataclass_instance_from_dict(models_results_type, model_results)
+            for model_results in models_results_dicts
+        ]
+
+        return models_results
+
+
+def save_model_results(
+    results: ModelsResultsT,
+    file_path: str,
+):
+    models_results_dicts: list[dict] = []
+
+    if os.path.exists(file_path):
+        with open(
+            file_path,
+            "rt",
+            encoding="utf-8",
+        ) as models_results_json_stream:
+            models_results_dicts = json.load(models_results_json_stream)
+
+            models_results_dicts = [
+                model_results
+                for model_results in models_results_dicts
+                if model_results["neural_net_name"] != results.neural_net_name
+            ]
+
+    models_results_dicts.append(asdict(results))
+
+    with open(
+        file_path,
+        "wt",
+        encoding="utf-8",
+    ) as models_results_json_write_stream:
+        models_results_json_write_stream.write(json.dumps(models_results_dicts))
+
+        return models_results_dicts

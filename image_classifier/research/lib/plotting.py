@@ -53,7 +53,6 @@ def plot_loss_and_accuracy(*metrics_items: NeuralNetTrainTestMetrics):
             label=DatasetSplit.TRAIN.value,
         )
 
-
         plt.xlabel("Epoch")
         plt.ylabel("Accuracy")
 

@@ -12,8 +12,15 @@ class TrainingConfig:
     momentum: float = 0
     weight_decay: float = 0
 
+    models_results_file_path: str = "./models-training-results.json"
+
     save_model_results_on_exit: bool = False
     save_training_checkpoint_on_exit: bool = False
+
+
+@dataclass
+class TestingConfig:
+    models_results_file_path: str = "./models-testing-results.json"
 
 
 @dataclass
@@ -21,6 +28,7 @@ class ImageClassifierConfig:
     seed: Optional[int]
 
     training: TrainingConfig
+    testing: TestingConfig
 
     test_time_augmentation_enabled: bool
     """Enables test time augmentation during testing and arbitrary image inference
@@ -34,8 +42,6 @@ class ImageClassifierConfig:
 
     device: Literal["cuda", "cpu"] = default_device
 
-    model_results_file_path: str = "./image_classifier/research/models-results.json"
-
     saved_models_directory_path: str = "./bin"
 
     training_checkpoint_path: Optional[str] = None
@@ -45,16 +51,17 @@ class ImageClassifierConfig:
 image_classifier_config = ImageClassifierConfig(
     seed=43,
     device="cuda",
-    test_time_augmentation_enabled=True,
+    test_time_augmentation_enabled=False,
     training=TrainingConfig(
-        epochs_count=400,
+        epochs_count=270,
         learning_rate=0.02,
         momentum=0.9,
         weight_decay=0.0005,
         save_training_checkpoint_on_exit=True,
         save_model_results_on_exit=True,
     ),
+    testing=TestingConfig(),
     batch_size=128,
     num_workers=4,
-    training_checkpoint_path="./bin/resnet-18.pt"
+    training_checkpoint_path="./bin/resnet-18.pt",
 )

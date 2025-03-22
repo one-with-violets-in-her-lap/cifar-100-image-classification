@@ -15,7 +15,9 @@ from image_classifier.utils.dataclass_from_dict import (
 @click.command("plot-loss-and-accuracy")
 def handle_plot_and_accuracy_command():
     with open(
-        image_classifier_config.model_results_file_path, "rt", encoding="utf-8"
+        image_classifier_config.training.models_results_file_path,
+        "rt",
+        encoding="utf-8",
     ) as models_results_json_stream:
         models_results_dicts: list[dict] = json.load(models_results_json_stream)
         models_results = [
