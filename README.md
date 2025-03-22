@@ -46,27 +46,27 @@ poetry run image-classifier classify --image-path ./image.jpg
 | **Loss function** | Cross entropy loss |
 
 | Data processing | |
-| --- | --- |
-| Dataset | CIFAR-100 |
+  | --- | --- |
+  | Dataset | CIFAR-100 |
 | Batch size | 128 |
 | Transforms | Upscaling to 64x64, applying `TrivialAugmentWide` and normalization |
 
 Test-time augmentation is used for inference to increase test accuracy by 3 percent
 
-`<test results bar chart here>`
+![bar chart comparison between TTA (accuracy: 73%, loss: 0.975) and non-TTA (accuracy: 70%, loss: 1.141) inference](https://github.com/user-attachments/assets/0e3ea882-4cf7-48a3-a6fe-60f6dcd2a572)
 
 ## State of the model
 
 The ~73% test accuracy is far from ideal. The model is currently overfitting, probably due
 to shortage of data to train on
 
-`<acc&loss curves plot here>`
+![line charts shows ~99 training accuracy curve and ~70 test accuracy curve](https://github.com/user-attachments/assets/209005dd-2f64-4fe1-b78d-fa359665a552)
 
 The possible solution is to train on other additional larger dataset (e.g. ImageNet).
 Switching to more performant neural net architecture is also a great idea (e.g. PyramidNet)
 
 ## References
 
-- HF project with ResNet 18 hyperparams tuned for CIFAR-100 - https://huggingface.co/edadaltocg/resnet18_cifar100
+- hf project with ResNet 18 hyperparams tuned for CIFAR-100 - https://huggingface.co/edadaltocg/resnet18_cifar100
 - "Deep Residual Learning for Image Recognition" paper - https://arxiv.org/abs/1512.03385
 - "How to Use Test-Time Augmentation to Make Better Predictions" - https://machinelearningmastery.com/how-to-use-test-time-augmentation-to-improve-model-performance-for-image-classification/
