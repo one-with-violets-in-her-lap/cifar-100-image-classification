@@ -216,7 +216,7 @@ def save_training_checkpoint(
 
     path_to_save_to = os.path.join(
         saved_models_directory_path,
-        f"{checkpoint['neural_net_name']} (training checkpoint).pth",
+        f"{checkpoint['neural_net_name']}.pt",
     )
 
     torch.save(checkpoint, path_to_save_to)

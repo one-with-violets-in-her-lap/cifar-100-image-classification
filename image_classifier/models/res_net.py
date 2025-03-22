@@ -153,16 +153,16 @@ class ResNet(NamedNeuralNet):
 class ResNet18(ResNet):
     def __init__(self, classes_count: int):
         super().__init__([2, 2, 2, 2], classes_count, 3)
-        self.name = "Resnet 18"
+        self.name = "resnet-18"
 
 
 class ResNet50(ResNet):
     def __init__(self, classes_count: int):
         super().__init__([3, 4, 6, 3], classes_count, 3)
-        self.name = "Resnet 50"
+        self.name = "resnet-50"
 
 
 class ResNet101(ResNet):
     def __init__(self, classes_count: int):
         super().__init__([3, 4, 23, 3], classes_count, 3)
-        self.name = "Resnet 101"
+        self.name = "resnet-101"
