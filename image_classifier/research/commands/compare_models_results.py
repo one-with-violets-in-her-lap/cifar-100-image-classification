@@ -1,17 +1,11 @@
-import json
 import click
 from matplotlib import pyplot as plt
 
 from image_classifier.research.lib.metrics import (
     NeuralNetMetrics,
-    NeuralNetTrainTestMetrics,
     load_models_results,
 )
 from image_classifier.config import image_classifier_config
-from image_classifier.utils.dataclass_from_dict import (
-    create_dataclass_instance_from_dict,
-)
-from image_classifier.utils.train_test_split import DatasetSplit
 
 
 @click.command("compare-models-results")

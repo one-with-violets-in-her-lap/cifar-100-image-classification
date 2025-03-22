@@ -61,7 +61,8 @@ class NeuralNetTrainTestMetrics:
         best_test_accuracy = round(self.get_best_accuracy(DatasetSplit.TEST), 2)
         return (
             f"Best loss - train: {best_train_loss}, test: {best_test_loss} | "
-            + f"Best accuracy - train: {best_train_accuracy}%, test: {best_test_accuracy}%"
+            + f"Best accuracy - train: {best_train_accuracy}%, "
+            + f"test: {best_test_accuracy}%"
         )
 
 

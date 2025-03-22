@@ -199,12 +199,15 @@ def save_model_results(results: NeuralNetTrainTestMetrics):
     models_results_dicts.append(asdict(results))
 
     with open(
-        image_classifier_config.training.models_results_file_path, "wt", encoding="utf-8"
+        image_classifier_config.training.models_results_file_path,
+        "wt",
+        encoding="utf-8",
     ) as models_results_json_write_stream:
         models_results_json_write_stream.write(json.dumps(models_results_dicts))
 
     click.echo(
-        f"Model results saved to {image_classifier_config.training.models_results_file_path}"
+        "Model results saved to "
+        + image_classifier_config.training.models_results_file_path
     )
 
 

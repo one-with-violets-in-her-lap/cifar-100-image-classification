@@ -71,5 +71,6 @@ def handle_test_model_command():
     )
 
     click.echo(
-        f"Model results saved to {image_classifier_config.testing.models_results_file_path}"
+        "Model results saved to "
+        + image_classifier_config.testing.models_results_file_path
     )
